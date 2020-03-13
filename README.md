@@ -9,7 +9,11 @@
 
 - 提交方式：
   
-    > 稍后公布
+    > 三月提交地址：https://box.nju.edu.cn/u/d/e03eb50cd60649918bf3/
+
+    > 查看已提交的文件：https://box.nju.edu.cn/d/3cabf484cae54c9ea01f/
+
+    > 密码：cg2020
 
 - 提交内容：
   
