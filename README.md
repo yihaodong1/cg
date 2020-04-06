@@ -1,8 +1,9 @@
 # 南京大学《计算机图形学》课程大作业
 
 ## 更新记录
+- \[2020/04/06 11:40\] 更新四月进展报告提交方式；更新绘制B样条曲线的说明，详见[Commit 1bfdecef](https://git.nju.edu.cn/songyc/cg2020a/-/commit/1bfdecef97b1dad5c374f80a20018164f7590bae)
 - \[2020/03/13 11:30\] 更新三月进展报告提交方式
-- \[2020/02/19 10:20\] 更新[2.2节](#22-指令文件格式)说明，详情见[Commit 6dc66448](https://git.nju.edu.cn/songyc/cg2020a/commit/6dc66448b9a74865b8409d6686cd48a8a724458d?view=parallel&w=1.nju.edu.cn/songyc/cg2020a/commits/master)
+- \[2020/02/19 10:20\] 更新[2.2节](#22-指令文件格式)说明，详情见[Commit 6dc66448](https://git.nju.edu.cn/songyc/cg2020a/commit/6dc66448b9a74865b8409d6686cd48a8a724458d)
 - \[2020/02/17 15:30\] 更新测试环境下载地址
 
 ## 1. 作业内容
@@ -14,9 +15,9 @@
 
 - 提交方式：
   
-    > 三月进展报告提交地址：https://box.nju.edu.cn/u/d/e03eb50cd60649918bf3/
+    > 四月进展报告提交地址：https://box.nju.edu.cn/u/d/a213c622c34e48ff9b93/
     >
-    > 查看已提交的文件：https://box.nju.edu.cn/d/3cabf484cae54c9ea01f/
+    > 查看已提交的文件：https://box.nju.edu.cn/d/b52eddffeb9a48e2a601/
     >
     > 密码：cg2020
 
