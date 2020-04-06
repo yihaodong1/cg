@@ -151,7 +151,7 @@
     > 
     > x0, y0, x1, y1, x2, y2 ... : int, 控制点坐标
     >
-    > algorithm: string, 绘制使用的算法，包括"Bezier"和"B-spline"（三次均匀B样条曲线，曲线不必经过首末控制点）
+    > algorithm: string, 绘制使用的算法，包括"Bezier"和"B-spline", 其中"B-spline"要求为三次（四阶）均匀B样条曲线，曲线不必经过首末控制点
 
 - 图元平移
     > ```
