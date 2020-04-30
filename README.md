@@ -1,6 +1,7 @@
 # 南京大学《计算机图形学》课程大作业
 
 ## 更新记录
+- \[2020/04/30 11:00\] 修复cg_cli.py中重置画布时未清空图元列表的错误，以及绘制时未转换y坐标的错误，详见[Commit 0ddd7b1e](https://git.nju.edu.cn/songyc/cg2020a/-/commit/0ddd7b1e750e5524e338ae89d45b5481ee0b40f1)
 - \[2020/04/06 17:00\] 新增[答疑](#qa)章节
 - \[2020/04/06 11:40\] 更新四月进展报告提交方式；更新绘制B样条曲线的说明，详见[Commit 1bfdecef](https://git.nju.edu.cn/songyc/cg2020a/-/commit/1bfdecef97b1dad5c374f80a20018164f7590bae)
 - \[2020/03/13 11:30\] 更新三月进展报告提交方式
