@@ -1,6 +1,7 @@
 # 南京大学《计算机图形学》课程大作业
 
 ## 更新记录
+- \[2020/05/25 14:10\] 更新五月系统报告提交方式
 - \[2020/04/30 11:00\] 修复cg_cli.py中重置画布时未清空图元列表的错误，以及绘制时未转换y坐标的错误，详见[Commit 0ddd7b1e](https://git.nju.edu.cn/songyc/cg2020a/-/commit/0ddd7b1e750e5524e338ae89d45b5481ee0b40f1)；更新[2.2节](#22-指令文件格式)说明，详情见[Commit 1193d505](https://git.nju.edu.cn/songyc/cg2020a/-/commit/1193d50526809c8ecefe3ea1d6426d66ecdcee21)
 - \[2020/04/06 17:00\] 新增[答疑](#qa)章节
 - \[2020/04/06 11:40\] 更新四月进展报告提交方式；更新绘制B样条曲线的说明，详见[Commit 1bfdecef](https://git.nju.edu.cn/songyc/cg2020a/-/commit/1bfdecef97b1dad5c374f80a20018164f7590bae)
@@ -45,10 +46,12 @@
     > 提交日的 **`23:00`**
 
 - 提交方式：
-  
-    > 四月进展报告提交地址：https://box.nju.edu.cn/u/d/a213c622c34e48ff9b93/
+    
+    > **`提交前请仔细检查压缩包中是否已包含所有必要内容（系统代码、系统报告、使用说明书、演示视频），务必按要求组织文件结构和命名文件。`**
     >
-    > 查看已提交的文件：https://box.nju.edu.cn/d/b52eddffeb9a48e2a601/
+    > 五月系统报告提交地址：https://box.nju.edu.cn/u/d/ae28988402884c6c97de/
+    >
+    > 查看已提交的文件：https://box.nju.edu.cn/d/f363ba7af8c649ea9ec1/
     >
     > 密码：cg2020
 
