@@ -246,7 +246,7 @@ CLI程序原则上只允许依赖numpy和pillow两个第三方库；GUI程序如
 - 简单方法二：
     > 直接在测试环境虚拟机中开发，需要自行配置IDE/编辑器。
     >
-    > 虚拟机文件[下载地址](https://box.nju.edu.cn/d/19abd9b3c3c54b95ab3c/)，密码：cg2020
+    > 虚拟机文件[下载地址](https://box.nju.edu.cn/d/19abd9b3c3c54b95ab3c/)，密码：cg2020 (虚拟机内环境登录账号：cg 密码：cg)
 
 IDE/编辑器选择：
 - [PyCharm](https://www.jetbrains.com/pycharm/download/)：功能强大
