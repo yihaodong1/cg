@@ -23,9 +23,9 @@
     
     > **`提交前请仔细检查压缩包中是否已包含所有必要内容（系统代码、系统报告、使用说明书、演示视频），务必按要求组织文件结构和命名文件。`**
     >
-    > 十月报告提交地址：https://box.nju.edu.cn/u/d/b3583d14a12e44238e94/
+    > 十一月报告提交地址：https://box.nju.edu.cn/u/d/72ccef67748a46dcadf0/
     >
-    > 查看已提交的文件：https://box.nju.edu.cn/d/e8d81f938d2d4f3885ed/
+    > 查看已提交的文件：https://box.nju.edu.cn/d/2a6421f799d941448cc7/
     >
     > 密码：cg2020
 
