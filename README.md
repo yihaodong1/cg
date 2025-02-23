@@ -1,6 +1,8 @@
 # 南京大学《计算机图形学》课程大作业
 
 ## 快速拉取分支
+- 进入一个目录: cd path_to_your_project 
+- 在该目录下初始化git仓库: git init
 - 添加该远程仓库：git remote add chendi https://git.nju.edu.cn/chendi/cg-2022-a.git 
 - fetch：git fetch chendi
 - 切换分支：git checkout -b your_branch_name chendi/CG2025a
