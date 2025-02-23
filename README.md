@@ -3,7 +3,7 @@
 ## 快速拉取分支
 - 添加该远程仓库：git remote add chendi https://git.nju.edu.cn/chendi/cg-2022-a.git 
 - fetch：git fetch chendi
-- 切换分支：git checkout -b your_repo_name chendi/CG2025a
+- 切换分支：git checkout -b your_branch_name chendi/CG2025a
 
 ## 联系方式
  - qq群：213819126, 申请时备注个人信息，入群后请自行将个人的群昵称改为“学号+空格+姓名”，例如：123456 某某某
