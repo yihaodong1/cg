@@ -1,8 +1,13 @@
 # 南京大学《计算机图形学》课程大作业
 
+## 快速拉取分支
+- 添加该远程仓库：git remote add chendi https://git.nju.edu.cn/chendi/cg-2022-a.git 
+- fetch：git fetch chendi
+- 切换分支：git checkout -b your_repo_name chendi/CG2025a
+
 ## 联系方式
  - qq群：213819126, 申请时备注个人信息，入群后请自行将个人的群昵称改为“学号+空格+姓名”，例如：123456 某某某
- - 邮箱：chendi.zhu@smail.nju.edu.cn
+ - 邮箱：chendi.zhu@smail.nju.edu.cn ~~有问题请以邮件沟通为主
 
 ## 更新记录
  - \[2025/02/24 08:00\] 3月提交地址已更新 https://box.nju.edu.cn/u/d/03c5cf6bf33d400197b4/ 密码 cg2025a
