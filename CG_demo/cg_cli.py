@@ -31,22 +31,17 @@ if __name__ == '__main__':
                 canvas = np.zeros([height, width, 3], np.uint8)
                 canvas.fill(255)
                 for item_type, p_list, algorithm, color in item_dict.values():
+                    pixels = []
                     if item_type == 'line':
                         pixels = alg.draw_line(p_list, algorithm)
-                        for x, y in pixels:
-                            canvas[height - 1 - y, x] = color
                     elif item_type == 'polygon':
                         pixels = alg.draw_polygon(p_list, algorithm)
-                        for x, y in pixels:
-                            canvas[height - 1 - y, x] = color
                     elif item_type == 'ellipse':
                         pixels = alg.draw_ellipse(p_list, algorithm)
-                        for x, y in pixels:
-                            canvas[height - 1 - y, x] = color
                     elif item_type == 'curve':
                         pixels = alg.draw_curve(p_list, algorithm)
-                        for x, y in pixels:
-                            canvas[height - 1 - y, x] = color
+                    for x, y in pixels:
+                        canvas[y, x] = color
                 Image.fromarray(canvas).save(os.path.join(output_dir, save_name + '.bmp'), 'bmp')
             elif line[0] == 'setColor':
                 pen_color[0] = int(line[1])
@@ -76,7 +71,18 @@ if __name__ == '__main__':
                 item_dict[item_id] = ['polygon', p_list, algorithm, np.array(pen_color)]
             elif line[0] == 'drawEllipse':
                 pass
-
+            elif line[0] == 'clip':
+                x_min = int(line[2])
+                y_min = int(line[3])
+                x_max = int(line[4])
+                y_max = int(line[5])
+                algorithm = line[6]
+                item = item_dict[line[1]]
+                item_dict[line[1]][1] = alg.clip(item[1], x_min, y_min, x_max, y_max, algorithm)
+            elif line[0] == 'translate':
+                deltax = int(line[2])
+                deltay = int(line[3])
+                item_dict[line[1]][1] = alg.translate(item_dict[line[1]][1], deltax, deltay)
 
             line = fp.readline()
 
