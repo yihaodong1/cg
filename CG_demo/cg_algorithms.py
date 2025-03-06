@@ -26,9 +26,40 @@ def draw_line(p_list, algorithm):
             for x in range(x0, x1 + 1):
                 result.append((x, int(y0 + k * (x - x0))))
     elif algorithm == 'DDA':
-        pass
+        if math.fabs(x0 - x1) > math.fabs(y0 - y1):
+            if x0 > x1:
+                x0, y0, x1, y1 = x1, y1, x0, y0
+            k = (y1 - y0) / (x1 - x0)
+            for x in range(x0, x1 + 1):
+                result.append((x, int(y0 + k * (x - x0))))
+        else:
+            if y0 > y1:
+                x0, y0, x1, y1 = x1, y1, x0, y0
+            k = (x1 - x0) / (y1 - y0)
+            for y in range(y0, y1 + 1):
+                result.append((int(x0 + k * (y - y0)), y))
+
     elif algorithm == 'Bresenham':
-        pass
+        steep = math.fabs(y0 - y1) > math.fabs(x0 - x1)
+        if steep:
+            x0, y0 = y0, x0
+            x1, y1 = y1, x1
+        if x0 > x1:
+            x0, y0, x1, y1 = x1, y1, x0, y0
+        deltax = x1 - x0
+        deltay = math.fabs(y1 - y0)
+        error = int(deltax / 2)
+        ystep = 1 if y0 < y1 else -1
+        y = y0
+        for x in range(x0, x1 + 1):
+            if steep:
+                result.append((y, x))
+            else:
+                result.append((x, y))
+            error = error - deltay
+            if error < 0:
+                y = y + ystep
+                error = error + deltax
     return result
 
 
@@ -73,7 +104,12 @@ def translate(p_list, dx, dy):
     :param dy: (int) 垂直方向平移量
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1], [x_2, y_2], ...]) 变换后的图元参数
     """
-    pass
+    result = []
+    for pos in p_list:
+        pos[0] = pos[0] + dx
+        pos[1] = pos[1] + dy
+        result.append(pos)
+    return result
 
 
 def rotate(p_list, x, y, r):
@@ -100,6 +136,22 @@ def scale(p_list, x, y, s):
     pass
 
 
+def encode(x, y, x_min, y_min, x_max, y_max):
+
+    LEFT = 1
+    RIGHT = 2
+    BOTTOM = 4
+    TOP = 8
+    int code = 0
+        if x < x_min
+		code = code | LEFT;
+    elif x > x_max
+		code = code | RIGHT;
+    if y < y_min
+		code = code | BOTTOM;
+    elif y > y_max
+		code = code | TOP;
+    return code
 def clip(p_list, x_min, y_min, x_max, y_max, algorithm):
     """线段裁剪
 
@@ -111,4 +163,8 @@ def clip(p_list, x_min, y_min, x_max, y_max, algorithm):
     :param algorithm: (string) 使用的裁剪算法，包括'Cohen-Sutherland'和'Liang-Barsky'
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1]]) 裁剪后线段的起点和终点坐标
     """
-    pass
+    if algorithm == 'Cohen-Sutherland':
+        c0 = encode(p_list[0][0], p_list[0][1], x_min, y_min, x_max, y_max)
+        c1 = encode(p_list[1][0], p_list[1][1], x_min, y_min, x_max, y_max)
+    elif algorithm == 'Liang-Barsky':
+        pass
