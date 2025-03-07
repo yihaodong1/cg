@@ -77,7 +77,11 @@ if __name__ == '__main__':
                 y1 = int(line[5])
                 item_dict[item_id] = ['ellipse', [[x0, y0], [x1, y1]], None, np.array(pen_color)]
             elif line[0] == 'rotate':
-                pass
+                x = int(line[2])
+                y = int(line[3])
+                r = int(line[4])
+                item = item_dict[line[1]]
+                item_dict[line[1]][1] = alg.rotate(item[1], x, y, r)
             elif line[0] == 'scale':
                 x = int(line[2])
                 y = int(line[3])
