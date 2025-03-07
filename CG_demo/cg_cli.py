@@ -37,7 +37,7 @@ if __name__ == '__main__':
                     elif item_type == 'polygon':
                         pixels = alg.draw_polygon(p_list, algorithm)
                     elif item_type == 'ellipse':
-                        pixels = alg.draw_ellipse(p_list, algorithm)
+                        pixels = alg.draw_ellipse(p_list)
                     elif item_type == 'curve':
                         pixels = alg.draw_curve(p_list, algorithm)
                     for x, y in pixels:
@@ -70,6 +70,15 @@ if __name__ == '__main__':
                 algorithm = line[i]
                 item_dict[item_id] = ['polygon', p_list, algorithm, np.array(pen_color)]
             elif line[0] == 'drawEllipse':
+                item_id = line[1]
+                x0 = int(line[2])
+                y0 = int(line[3])
+                x1 = int(line[4])
+                y1 = int(line[5])
+                item_dict[item_id] = ['ellipse', [[x0, y0], [x1, y1]], None, np.array(pen_color)]
+            elif line[0] == 'rotate':
+                pass
+            elif line[0] == 'scale':
                 pass
             elif line[0] == 'clip':
                 x_min = int(line[2])

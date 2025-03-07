@@ -83,7 +83,41 @@ def draw_ellipse(p_list):
     :param p_list: (list of list of int: [[x0, y0], [x1, y1]]) 椭圆的矩形包围框左上角和右下角顶点坐标
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1], [x_2, y_2], ...]) 绘制结果的像素点坐标列表
     """
-    pass
+    x0, y0 = p_list[0]
+    x1, y1 = p_list[1]
+    a = math.fabs(x0 - x1) / 2
+    b = math.fabs(y0 - y1) / 2
+    center = [int((x0 + x1) / 2), int((y0 + y1) / 2)]
+    xpos, ypos = 0, int(b)
+    d = b**2 + a**2 * (ypos - 0.5)**2 - a**2 * b**2
+    result = []
+    tmp = []
+    while a**2 * ypos > b**2 * xpos:
+        tmp.append([xpos, ypos])
+        if d < 0:
+            d = d + b**2 * ((xpos * 2) + 3)
+            xpos = xpos + 1
+        else:
+            d = d + b**2 * ((xpos * 2) + 3) + a**2 * (-(ypos * 2) + 2)
+            xpos = xpos + 1
+            ypos = ypos - 1
+
+    d = b**2 * (xpos + 0.5) * (xpos + 0.5) + a**2 * (ypos - 1) * (ypos - 1) - a**2 * b**2
+    while ypos > 0:
+        tmp.append([xpos, ypos])
+        if d < 0:
+            d = d + b**2 * ((xpos * 2) + 2) + a**2 * (-(ypos * 2) + 3)
+            xpos = xpos + 1
+            ypos = ypos - 1
+        else:
+            d = d + a**2 * (-(ypos * 2) + 3)
+            ypos = ypos - 1
+    result = []
+    result = result + [[pos[0]+center[0], pos[1] + center[1]] for pos in tmp]
+    result = result + [[-pos[0]+center[0], pos[1] + center[1]] for pos in tmp]
+    result = result + [[pos[0]+center[0], -pos[1] + center[1]] for pos in tmp]
+    result = result + [[-pos[0]+center[0], -pos[1] + center[1]] for pos in tmp]
+    return result
 
 
 def draw_curve(p_list, algorithm):
