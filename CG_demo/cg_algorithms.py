@@ -120,6 +120,11 @@ def draw_ellipse(p_list):
     return result
 
 
+def getB(i, n):
+    """贝塞尔函数
+    """
+    pass
+
 def draw_curve(p_list, algorithm):
     """绘制曲线
 
@@ -127,7 +132,36 @@ def draw_curve(p_list, algorithm):
     :param algorithm: (string) 绘制使用的算法，包括'Bezier'和'B-spline'（三次均匀B样条曲线，曲线不必经过首末控制点）
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1], [x_2, y_2], ...]) 绘制结果的像素点坐标列表
     """
-    pass
+    N = len(p_list)
+    n = N - 1 
+    result = []
+    xmax = max(pos[0] for pos in p_list)
+    xmin = min(pos[0] for pos in p_list)
+    ymax = max(pos[1] for pos in p_list)
+    ymin = min(pos[1] for pos in p_list)
+    total = max(xmax - xmin, ymax - ymin)
+    if algorithm == 'Bezier':
+        for T in range(total):
+            t = T* 1 / total
+            x,y = 0,0
+            for i in range(N):
+                B = math.factorial(n)*t**i*(1-t)**(n-i)/(math.factorial(i)*math.factorial(n-i))
+                x = int(x + p_list[i][0]*B)
+                y = int(p_list[i][1]*B + y)
+            result.append([x, y])
+    elif algorithm == 'B-spline':
+        for i in range(N - 3):
+            for T in range(total):
+                t = T* 1 / total
+                b0=1/6*(1-t)**3
+                b1=1/6*(3.*t**3-6*t**2+4)
+                b2=1/6*(-3*t**3+3*t**2+3*t+1)
+                b3=1/6*t**3;
+                x=int(b0*p_list[i][0]+b1*p_list[i+1][0]+b2*p_list[i+2][0]+b3*p_list[i+3][0])
+                y=int(b0*p_list[i][1]+b1*p_list[i+1][1]+b2*p_list[i+2][1]+b3*p_list[i+3][1])
+                result.append([x,y])
+    return result
+
 
 
 def translate(p_list, dx, dy):

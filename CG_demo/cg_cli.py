@@ -76,6 +76,20 @@ if __name__ == '__main__':
                 x1 = int(line[4])
                 y1 = int(line[5])
                 item_dict[item_id] = ['ellipse', [[x0, y0], [x1, y1]], None, np.array(pen_color)]
+            elif line[0] == 'drawCurve':
+                item_id = line[1]
+                i = 2
+                p_list = []
+                while(True):
+                    try:
+                        x = int(line[i])
+                        y = int(line[i + 1])
+                        p_list.append((x, y))
+                    except ValueError:
+                        break
+                    i = i + 2
+                algorithm = line[i]
+                item_dict[item_id] = ['curve', p_list, algorithm, np.array(pen_color)]
             elif line[0] == 'rotate':
                 x = int(line[2])
                 y = int(line[3])
