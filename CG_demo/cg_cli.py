@@ -79,7 +79,11 @@ if __name__ == '__main__':
             elif line[0] == 'rotate':
                 pass
             elif line[0] == 'scale':
-                pass
+                x = int(line[2])
+                y = int(line[3])
+                s = float(line[4])
+                item = item_dict[line[1]]
+                item_dict[line[1]][1] = alg.scale(item[1], x, y, s)
             elif line[0] == 'clip':
                 x_min = int(line[2])
                 y_min = int(line[3])

@@ -167,7 +167,10 @@ def scale(p_list, x, y, s):
     :param s: (float) 缩放倍数
     :return: (list of list of int: [[x_0, y_0], [x_1, y_1], [x_2, y_2], ...]) 变换后的图元参数
     """
-    pass
+    result = []
+    for [xpos, ypos] in p_list:
+        result.append([int(x + s * (xpos - x)), int(y + s * (ypos - y))])
+    return result
 
 
 def encode(x, y, x_min, y_min, x_max, y_max):
