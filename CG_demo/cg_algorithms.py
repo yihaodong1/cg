@@ -32,12 +32,14 @@ def draw_line(p_list, algorithm):
             k = (y1 - y0) / (x1 - x0)
             for x in range(x0, x1 + 1):
                 result.append((x, int(y0 + k * (x - x0))))
-        else:
+        elif math.fabs(x0 - x1) < math.fabs(y0 - y1):
             if y0 > y1:
                 x0, y0, x1, y1 = x1, y1, x0, y0
             k = (x1 - x0) / (y1 - y0)
             for y in range(y0, y1 + 1):
                 result.append((int(x0 + k * (y - y0)), y))
+        else:
+            result.append([x0, y0])
 
     elif algorithm == 'Bresenham':
         steep = math.fabs(y0 - y1) > math.fabs(x0 - x1)
@@ -119,11 +121,6 @@ def draw_ellipse(p_list):
     result = result + [[-pos[0]+center[0], -pos[1] + center[1]] for pos in tmp]
     return result
 
-
-def getB(i, n):
-    """贝塞尔函数
-    """
-    pass
 
 def draw_curve(p_list, algorithm):
     """绘制曲线
