@@ -14,9 +14,154 @@ from PyQt5.QtWidgets import (
     QListWidget,
     QHBoxLayout,
     QWidget,
+    QLabel,
+    QPushButton,
+    QDialog,
+    QSlider,
+    QVBoxLayout,
+    QInputDialog,
+    QMessageBox,
     QStyleOptionGraphicsItem)
-from PyQt5.QtGui import QPainter, QMouseEvent, QColor
-from PyQt5.QtCore import QRectF
+from PyQt5.QtGui import QPainter, QMouseEvent, QColor, QPen
+from PyQt5.QtCore import QRectF, Qt
+
+class NewWindow(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+ 
+    def initUI(self):
+        self.setWindowFlags(Qt.WindowCloseButtonHint)
+
+        self.s1 = QSlider(Qt.Horizontal)
+        self.s2 = QSlider(Qt.Horizontal)
+        self.s3 = QSlider(Qt.Horizontal)
+
+        self.s1.setMinimum(0)
+        self.s1.setMaximum(255)
+        self.s1.setValue(0)
+        self.s1.setTickPosition(QSlider.TicksBelow)
+        self.s1.setTickInterval(5)
+        self.s1.setStyleSheet("""
+            QSlider::groove:horizontal {
+                background-color: #ddd;
+                height: 8px;
+                border-radius: 4px;
+            }
+
+            QSlider::sub-page:horizontal {
+                background-color: red;
+                height: 8px;
+                border-radius: 4px;
+            }
+
+            QSlider::handle:horizontal {
+                background-color: red;
+                width: 20px;
+                height: 20px;
+                margin: -6px 0;
+                border-radius: 10px;
+            }
+        """)
+        self.value_label1 = QLabel(str(self.s1.value()))
+        self.value_label1.setAlignment(Qt.AlignCenter)  # 居中对齐
+        # 连接滑块的 valueChanged 信号到更新标签的槽函数
+        self.s1.valueChanged.connect(self.update_label1)
+
+        self.value_label2 = QLabel(str(self.s2.value()))
+        self.value_label2.setAlignment(Qt.AlignCenter)  # 居中对齐
+        # 连接滑块的 valueChanged 信号到更新标签的槽函数
+        self.s2.valueChanged.connect(self.update_label2)
+
+        self.value_label3 = QLabel(str(self.s3.value()))
+        self.value_label3.setAlignment(Qt.AlignCenter)  # 居中对齐
+        # 连接滑块的 valueChanged 信号到更新标签的槽函数
+        self.s3.valueChanged.connect(self.update_label3)
+
+        self.s2.setMinimum(0)
+        self.s2.setMaximum(255)
+        self.s2.setValue(0)
+        self.s2.setTickPosition(QSlider.TicksBelow)
+        self.s2.setTickInterval(5)
+        self.s2.setStyleSheet("""
+            QSlider::groove:horizontal {
+                background-color: #ddd;
+                height: 8px;
+                border-radius: 4px;
+            }
+
+            QSlider::sub-page:horizontal {
+                background-color: green;
+                height: 8px;
+                border-radius: 4px;
+            }
+
+            QSlider::handle:horizontal {
+                background-color: green;
+                width: 20px;
+                height: 20px;
+                margin: -6px 0;
+                border-radius: 10px;
+            }
+        """)
+
+        self.s3.setMinimum(0)
+        self.s3.setMaximum(255)
+        self.s3.setValue(0)
+        self.s3.setTickPosition(QSlider.TicksBelow)
+        self.s3.setTickInterval(5)
+        self.s3.setStyleSheet("""
+            QSlider::groove:horizontal {
+                background-color: #ddd;
+                height: 8px;
+                border-radius: 4px;
+            }
+
+            QSlider::sub-page:horizontal {
+                background-color: blue;
+                height: 8px;
+                border-radius: 4px;
+            }
+
+            QSlider::handle:horizontal {
+                background-color: blue;
+                width: 20px;
+                height: 20px;
+                margin: -6px 0;
+                border-radius: 10px;
+            }
+        """)
+        
+        self.ok_button = QPushButton("确定")
+        self.ok_button.clicked.connect(self.accept)  # 点击后关闭弹窗
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.s1)
+        self.layout.addWidget(self.value_label1)
+        self.layout.addWidget(self.s2)
+        self.layout.addWidget(self.value_label2)
+        self.layout.addWidget(self.s3)
+        self.layout.addWidget(self.value_label3)
+        self.layout.addWidget(self.ok_button)
+        self.setLayout(self.layout)
+        self.setWindowTitle('子窗口')
+        self.resize(280, 230)
+    def update_label1(self):
+        # 更新标签显示当前滑块的值
+        self.value_label1.setText(str(self.s1.value()))
+
+    def update_label2(self):
+        # 更新标签显示当前滑块的值
+        self.value_label2.setText(str(self.s2.value()))
+
+    def update_label3(self):
+        # 更新标签显示当前滑块的值
+        self.value_label3.setText(str(self.s3.value()))
+
+    def get_slider_value(self):
+        # 返回滑块的当前值
+        return self.s1.value(), self.s2.value(), self.s3.value()
+
 
 
 class MyCanvas(QGraphicsView):
@@ -34,6 +179,7 @@ class MyCanvas(QGraphicsView):
         self.temp_algorithm = ''
         self.temp_id = ''
         self.temp_item = None
+        self.pen = QPen(QColor(0,0,0))
 
     def start_draw_line(self, algorithm, item_id):
         self.status = 'line'
@@ -52,6 +198,10 @@ class MyCanvas(QGraphicsView):
 
     def start_draw_curve(self, algorithm, item_id):
         self.status = 'curve'
+        self.temp_algorithm = algorithm
+        self.temp_id = item_id
+    def start_clip(self, algorithm, item_id):
+        self.status = 'clip'
         self.temp_algorithm = algorithm
         self.temp_id = item_id
 
@@ -79,14 +229,27 @@ class MyCanvas(QGraphicsView):
         x = int(pos.x())
         y = int(pos.y())
         if self.status == 'line' or self.status == 'ellipse':
-            self.temp_item = MyItem(self.temp_id, self.status, [[x, y], [x, y]], self.temp_algorithm)
+            self.temp_item = MyItem(self.temp_id, self.status, [[x, y], [x, y]], self.temp_algorithm, self.pen)
             self.scene().addItem(self.temp_item)
         elif self.status == 'polygon':
             if(self.temp_item == None):
-                self.temp_item = MyItem(self.temp_id, self.status, [[x, y], [x, y]], self.temp_algorithm)
+                self.temp_item = MyItem(self.temp_id, self.status, [[x, y], [x, y]], self.temp_algorithm, self.pen)
                 self.scene().addItem(self.temp_item)
             else:
                 self.temp_item.p_list.append([x, y])
+        elif self.status == 'curve':
+            if(event.button() == Qt.LeftButton):
+                if(self.temp_item == None):
+                    self.temp_item = MyItem(self.temp_id, self.status, [[x, y]], self.temp_algorithm, self.pen)
+                    self.scene().addItem(self.temp_item)
+                else:
+                    self.temp_item.p_list.append([x, y])
+        elif self.status == 'clip':
+            if(self.selected_id != ''):
+                self.temp_item = MyItem(self.temp_id, self.status, [[x, y], [x, y]], self.temp_algorithm, self.pen)
+                self.item_dict[self.selected_id].p_list = alg.clip(self.item_dict[self.selected_id].p_list,\
+                                                                   x, y, x, y, self.temp_algorithm)
+
         self.updateScene([self.sceneRect()])
         super().mousePressEvent(event)
 
@@ -104,6 +267,12 @@ class MyCanvas(QGraphicsView):
             if(len(self.temp_item.p_list) >= 4\
                    and math.fabs((endx - startx)**2 + (endy - starty)**2) < 100):# 100 to be discussed
                 self.temp_item.p_list[-1] = self.temp_item.p_list[0]
+        elif self.status == 'clip':
+            if(self.selected_id != ''):
+                self.temp_item.p_list[1] = [x, y]
+                startx, starty = self.temp_item.p_list[0]
+                self.item_dict[self.selected_id].p_list = alg.clip(self.item_dict[self.selected_id].p_list,\
+                                                                   startx, starty, x, y, self.temp_algorithm)
         self.updateScene([self.sceneRect()])
         super().mouseMoveEvent(event)
 
@@ -123,6 +292,13 @@ class MyCanvas(QGraphicsView):
                 self.list_widget.addItem(self.temp_id)
                 self.finish_draw()
                 self.temp_item = None
+        elif self.status == 'curve':
+            if(event.button() == Qt.RightButton and self.temp_item != None):
+                self.item_dict[self.temp_id] = self.temp_item
+                self.list_widget.addItem(self.temp_id)
+                self.finish_draw()
+                self.temp_item = None
+
         super().mouseReleaseEvent(event)
 
 
@@ -130,7 +306,7 @@ class MyItem(QGraphicsItem):
     """
     自定义图元类，继承自QGraphicsItem
     """
-    def __init__(self, item_id: str, item_type: str, p_list: list, algorithm: str = '', parent: QGraphicsItem = None):
+    def __init__(self, item_id: str, item_type: str, p_list: list, algorithm: str = '', pen: QPen = QPen(QColor(0,0,0)), parent: QGraphicsItem = None):
         """
 
         :param item_id: 图元ID
@@ -145,8 +321,10 @@ class MyItem(QGraphicsItem):
         self.p_list = p_list        # 图元参数
         self.algorithm = algorithm  # 绘制算法，'DDA'、'Bresenham'、'Bezier'、'B-spline'等
         self.selected = False
+        self.pen = pen
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...) -> None:
+        painter.setPen(self.pen)
         if self.item_type == 'line':
             item_pixels = alg.draw_line(self.p_list, self.algorithm)
             for p in item_pixels:
@@ -254,6 +432,8 @@ class MainWindow(QMainWindow):
 
         # 连接信号和槽函数
         exit_act.triggered.connect(qApp.quit)
+        reset_canvas_act.triggered.connect(self.reset_canvas_action)
+        set_pen_act.triggered.connect(self.set_pen_action)
         line_naive_act.triggered.connect(self.line_naive_action)
         line_dda_act.triggered.connect(self.line_dda_action)
         line_bresenham_act.triggered.connect(self.line_bresenham_action)
@@ -263,6 +443,8 @@ class MainWindow(QMainWindow):
         curve_b_spline_act.triggered.connect(self.curve_b_spline_action)
         curve_bezier_act.triggered.connect(self.curve_bezier_action)
         translate_act.triggered.connect(self.translate_action)
+        clip_cohen_sutherland_act.triggered.connect(self.clip_cohen_sutherland_action)
+        clip_liang_barsky_act.triggered.connect(self.clip_liang_barsky_action)
         self.list_widget.currentTextChanged.connect(self.canvas_widget.selection_changed)
 
         # 设置主窗口的布局
@@ -280,6 +462,27 @@ class MainWindow(QMainWindow):
         _id = str(self.item_cnt)
         self.item_cnt += 1
         return _id
+
+    def reset_canvas_action(self):
+        self.scene.clear()
+        self.list_widget.clear()
+        self.canvas_widget.item_cnt = 0
+        self.canvas_widget.item_dict = {}
+        self.canvas_widget.selected_id = ''
+        self.canvas_widget.status = ''
+        self.canvas_widget.temp_algorithm = ''
+        self.canvas_widget.temp_id = ''
+        self.canvas_widget.temp_item = None
+
+    def set_pen_action(self):
+        # name, ok = QInputDialog.getText(self.central_widget, "修改姓名", '请输入姓名')
+        
+        new = NewWindow()
+        new.show()
+        if new.exec_() == QDialog.Accepted:
+            # 如果用户点击“确定”，获取滑块的值并更新标签
+            r,g,b = new.get_slider_value()
+            self.canvas_widget.pen = QPen(QColor(r, g, b))
 
     def line_naive_action(self):
         self.canvas_widget.start_draw_line('Naive', self.get_id())
@@ -328,6 +531,13 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage('B-spline算法绘制曲线')
         self.list_widget.clearSelection()
         self.canvas_widget.clear_selection()
+
+    def clip_cohen_sutherland_action(self):
+        self.canvas_widget.start_clip('Cohen-Sutherland', self.get_id())
+        self.statusBar().showMessage('Cohen-Sutherland算法裁剪')
+
+    def clip_liang_barsky_action(self):
+        pass
 
     def translate_action(self):
         pass

@@ -136,7 +136,7 @@ def draw_curve(p_list, algorithm):
     xmin = min(pos[0] for pos in p_list)
     ymax = max(pos[1] for pos in p_list)
     ymin = min(pos[1] for pos in p_list)
-    total = max(xmax - xmin, ymax - ymin)
+    total = 100 * max(xmax - xmin, ymax - ymin)
     if algorithm == 'Bezier':
         for T in range(total):
             t = T* 1 / total
