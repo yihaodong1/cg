@@ -269,7 +269,7 @@ class MyCanvas(QGraphicsView):
                 centerx = int(sum(pos[0] for pos in p_list) / len(p_list))
                 centery = int(sum(pos[1] for pos in p_list) / len(p_list))
                 radius = math.sqrt((x - centerx)**2 + (y - centery)**2)
-                self.temp_item = MyItem(self.temp_id, self.status, [[centerx, centery, radius]], self.temp_algorithm, self.pen)
+                self.temp_item = MyItem(self.temp_id, self.status, [[centerx, centery, radius], p_list], self.temp_algorithm, self.pen)
                 self.item_dict[self.selected_id].p_list = alg.rotate(p_list, centerx, centery, 0)
 
         elif self.status == 'rotate':
@@ -277,7 +277,7 @@ class MyCanvas(QGraphicsView):
                 p_list = self.item_dict[self.selected_id].p_list
                 centerx = int(sum(pos[0] for pos in p_list) / len(p_list))
                 centery = int(sum(pos[1] for pos in p_list) / len(p_list))
-                self.temp_item = MyItem(self.temp_id, self.status, [[centerx, centery, 0], [x, y]], self.temp_algorithm, self.pen)
+                self.temp_item = MyItem(self.temp_id, self.status, [[centerx, centery], [x, y], p_list], self.temp_algorithm, self.pen)
                 self.item_dict[self.selected_id].p_list = alg.rotate(p_list, centerx, centery, 0)
 
         elif self.status == 'translate':
@@ -327,19 +327,19 @@ class MyCanvas(QGraphicsView):
         elif self.status == 'scale':
             if(self.selected_id != ''):
                 centerx, centery, start_r = self.temp_item.p_list[0]
+                p_list = self.temp_item.p_list[1]
                 radius = math.sqrt((x - centerx)**2 + (y - centery)**2)
-                self.temp_item.p_list[0][2] = radius
-                self.item_dict[self.selected_id].p_list = alg.scale(self.item_dict[self.selected_id].p_list,\
+                self.item_dict[self.selected_id].p_list = alg.scale(p_list, \
                                                                    centerx, centery, radius / start_r)
 
         elif self.status == 'rotate':
             if(self.selected_id != ''):
-                centerx, centery, r = self.temp_item.p_list[0]
+                centerx, centery= self.temp_item.p_list[0]
                 startx, starty = self.temp_item.p_list[1]
+                p_list = self.temp_item.p_list[2]
                 theta = int(self.cal_theta(startx - centerx, starty - centery, x - centerx, y - centery))
-                self.temp_item.p_list[0][2] = theta
-                self.item_dict[self.selected_id].p_list = alg.rotate(self.item_dict[self.selected_id].p_list,\
-                                                                   centerx, centery, theta - r)
+                self.item_dict[self.selected_id].p_list = alg.rotate(p_list, \
+                                                                   centerx, centery, theta)
 
         elif self.status == 'translate':
             if(self.selected_id != ''):
