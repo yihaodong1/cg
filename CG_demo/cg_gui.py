@@ -200,9 +200,22 @@ class MyCanvas(QGraphicsView):
         self.status = 'curve'
         self.temp_algorithm = algorithm
         self.temp_id = item_id
+
     def start_clip(self, algorithm, item_id):
         self.status = 'clip'
         self.temp_algorithm = algorithm
+        self.temp_id = item_id
+
+    def start_translate(self, item_id):
+        self.status = 'translate'
+        self.temp_id = item_id
+
+    def start_rotate(self, item_id):
+        self.status = 'rotate'
+        self.temp_id = item_id
+
+    def start_scale(self, item_id):
+        self.status = 'scale'
         self.temp_id = item_id
 
     def finish_draw(self):
@@ -246,12 +259,45 @@ class MyCanvas(QGraphicsView):
                     self.temp_item.p_list.append([x, y])
         elif self.status == 'clip':
             if(self.selected_id != ''):
-                self.temp_item = MyItem(self.temp_id, self.status, [[x, y], [x, y]], self.temp_algorithm, self.pen)
-                self.item_dict[self.selected_id].p_list = alg.clip(self.item_dict[self.selected_id].p_list,\
+                p_list = self.item_dict[self.selected_id].p_list
+                self.temp_item = MyItem(self.temp_id, self.status, [[x, y], [x, y], p_list], self.temp_algorithm, self.pen)
+                self.item_dict[self.selected_id].p_list = alg.clip(p_list,\
                                                                    x, y, x, y, self.temp_algorithm)
+        elif self.status == 'scale':
+            if(self.selected_id != ''):
+                p_list = self.item_dict[self.selected_id].p_list
+                centerx = int(sum(pos[0] for pos in p_list) / len(p_list))
+                centery = int(sum(pos[1] for pos in p_list) / len(p_list))
+                radius = math.sqrt((x - centerx)**2 + (y - centery)**2)
+                self.temp_item = MyItem(self.temp_id, self.status, [[centerx, centery, radius]], self.temp_algorithm, self.pen)
+                self.item_dict[self.selected_id].p_list = alg.rotate(p_list, centerx, centery, 0)
+
+        elif self.status == 'rotate':
+            if(self.selected_id != ''):
+                p_list = self.item_dict[self.selected_id].p_list
+                centerx = int(sum(pos[0] for pos in p_list) / len(p_list))
+                centery = int(sum(pos[1] for pos in p_list) / len(p_list))
+                self.temp_item = MyItem(self.temp_id, self.status, [[centerx, centery, 0], [x, y]], self.temp_algorithm, self.pen)
+                self.item_dict[self.selected_id].p_list = alg.rotate(p_list, centerx, centery, 0)
+
+        elif self.status == 'translate':
+            if(self.selected_id != ''):
+                p_list = self.item_dict[self.selected_id].p_list
+                self.temp_item = MyItem(self.temp_id, self.status, [[x, y, 0, 0]], self.temp_algorithm, self.pen)
+                self.item_dict[self.selected_id].p_list = alg.translate(p_list, 0, 0)
 
         self.updateScene([self.sceneRect()])
         super().mousePressEvent(event)
+
+    def cal_theta(self, x1, y1, x2, y2):
+        cos_theta = (x1 * x2 + y1 * y2) / (math.sqrt(x1**2 + y1**2) * math.sqrt(x2**2 + y2**2))
+        sin_theta = (x1 * y2 - x2 * y1) / (math.sqrt(x1**2 + y1**2) * math.sqrt(x2**2 + y2**2))
+        theta = math.atan(sin_theta / cos_theta) * 180 / math.pi
+        if cos_theta < 0 and sin_theta < 0:
+            theta -= 180
+        elif cos_theta < 0 and sin_theta > 0:
+            theta += 180
+        return theta
 
     def mouseMoveEvent(self, event: QMouseEvent) -> None:
         pos = self.mapToScene(event.localPos().toPoint())
@@ -271,8 +317,37 @@ class MyCanvas(QGraphicsView):
             if(self.selected_id != ''):
                 self.temp_item.p_list[1] = [x, y]
                 startx, starty = self.temp_item.p_list[0]
-                self.item_dict[self.selected_id].p_list = alg.clip(self.item_dict[self.selected_id].p_list,\
-                                                                   startx, starty, x, y, self.temp_algorithm)
+                p_list = self.temp_item.p_list[2]
+                x0 = min(startx, x)
+                y0 = min(starty, y)
+                x1 = max(startx, x)
+                y1 = max(starty, y)
+                self.item_dict[self.selected_id].p_list = alg.clip(p_list, \
+                                                                   x0, y0, x1, y1, self.temp_algorithm)
+        elif self.status == 'scale':
+            if(self.selected_id != ''):
+                centerx, centery, start_r = self.temp_item.p_list[0]
+                radius = math.sqrt((x - centerx)**2 + (y - centery)**2)
+                self.temp_item.p_list[0][2] = radius
+                self.item_dict[self.selected_id].p_list = alg.scale(self.item_dict[self.selected_id].p_list,\
+                                                                   centerx, centery, radius / start_r)
+
+        elif self.status == 'rotate':
+            if(self.selected_id != ''):
+                centerx, centery, r = self.temp_item.p_list[0]
+                startx, starty = self.temp_item.p_list[1]
+                theta = int(self.cal_theta(startx - centerx, starty - centery, x - centerx, y - centery))
+                self.temp_item.p_list[0][2] = theta
+                self.item_dict[self.selected_id].p_list = alg.rotate(self.item_dict[self.selected_id].p_list,\
+                                                                   centerx, centery, theta - r)
+
+        elif self.status == 'translate':
+            if(self.selected_id != ''):
+                startx, starty, dx, dy = self.temp_item.p_list[0]
+                self.temp_item.p_list[0][2] = x - startx
+                self.temp_item.p_list[0][3] = y - starty
+                self.item_dict[self.selected_id].p_list = alg.translate(self.item_dict[self.selected_id].p_list,\
+                                                                   x - startx - dx, y - starty - dy)
         self.updateScene([self.sceneRect()])
         super().mouseMoveEvent(event)
 
@@ -445,6 +520,8 @@ class MainWindow(QMainWindow):
         translate_act.triggered.connect(self.translate_action)
         clip_cohen_sutherland_act.triggered.connect(self.clip_cohen_sutherland_action)
         clip_liang_barsky_act.triggered.connect(self.clip_liang_barsky_action)
+        scale_act.triggered.connect(self.scale_action)
+        rotate_act.triggered.connect(self.rotate_action)
         self.list_widget.currentTextChanged.connect(self.canvas_widget.selection_changed)
 
         # 设置主窗口的布局
@@ -464,15 +541,18 @@ class MainWindow(QMainWindow):
         return _id
 
     def reset_canvas_action(self):
+        self.list_widget.currentTextChanged.disconnect(self.canvas_widget.selection_changed)
+        self.canvas_widget.clear_selection()
         self.scene.clear()
         self.list_widget.clear()
-        self.canvas_widget.item_cnt = 0
+        self.item_cnt = 0
         self.canvas_widget.item_dict = {}
         self.canvas_widget.selected_id = ''
         self.canvas_widget.status = ''
         self.canvas_widget.temp_algorithm = ''
         self.canvas_widget.temp_id = ''
         self.canvas_widget.temp_item = None
+        self.list_widget.currentTextChanged.connect(self.canvas_widget.selection_changed)
 
     def set_pen_action(self):
         # name, ok = QInputDialog.getText(self.central_widget, "修改姓名", '请输入姓名')
@@ -483,6 +563,7 @@ class MainWindow(QMainWindow):
             # 如果用户点击“确定”，获取滑块的值并更新标签
             r,g,b = new.get_slider_value()
             self.canvas_widget.pen = QPen(QColor(r, g, b))
+        self.canvas_widget.clear_selection()
 
     def line_naive_action(self):
         self.canvas_widget.start_draw_line('Naive', self.get_id())
@@ -540,7 +621,25 @@ class MainWindow(QMainWindow):
         pass
 
     def translate_action(self):
-        pass
+        self.canvas_widget.start_translate(self.get_id())
+        if self.canvas_widget.selected_id != '':
+            self.statusBar().showMessage('平移')
+        else:
+            self.statusBar().showMessage('请先选择一个图元')
+
+    def rotate_action(self):
+        self.canvas_widget.start_rotate(self.get_id())
+        if self.canvas_widget.selected_id != '':
+            self.statusBar().showMessage('旋转')
+        else:
+            self.statusBar().showMessage('请先选择一个图元')
+
+    def scale_action(self):
+        self.canvas_widget.start_scale(self.get_id())
+        if self.canvas_widget.selected_id != '':
+            self.statusBar().showMessage('缩放')
+        else:
+            self.statusBar().showMessage('请先选择一个图元')
 
 
 if __name__ == '__main__':
