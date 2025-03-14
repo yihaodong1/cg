@@ -50,7 +50,7 @@ def draw_line(p_list, algorithm):
             x0, y0, x1, y1 = x1, y1, x0, y0
         deltax = x1 - x0
         deltay = math.fabs(y1 - y0)
-        error = int(deltax / 2)
+        error = deltax
         ystep = 1 if y0 < y1 else -1
         y = y0
         for x in range(x0, x1 + 1):
@@ -58,10 +58,10 @@ def draw_line(p_list, algorithm):
                 result.append((y, x))
             else:
                 result.append((x, y))
-            error = error - deltay
+            error = error - 2 * deltay
             if error < 0:
                 y = y + ystep
-                error = error + deltax
+                error = error + 2 * deltax
     return result
 
 
